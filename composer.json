@@ -1,0 +1,32 @@
+{
+  "name": "damax/chargeable-api",
+  "type": "library",
+  "description": "Charge credit for your API.",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": { "Damax\\ChargeableApi\\": "src" }
+  },
+  "autoload-dev": {
+    "psr-4": { "Damax\\ChargeableApi\\Tests\\": "tests" }
+  },
+  "require": {
+    "php": "^7.1"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.10",
+    "symfony/phpunit-bridge": "^4.0"
+  },
+  "scripts": {
+    "cs": "php-cs-fixer fix",
+    "test": "simple-phpunit",
+    "test-cc": "./bin/phpunit-coverage"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  }
+}
