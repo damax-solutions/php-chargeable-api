@@ -14,7 +14,8 @@
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.10",
-    "symfony/phpunit-bridge": "^4.0"
+    "symfony/phpunit-bridge": "^4.0",
+    "symfony/security-bundle": "^4.1"
   },
   "scripts": {
     "cs": "php-cs-fixer fix",

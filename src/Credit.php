@@ -24,29 +24,24 @@ final class Credit
     }
 
     /**
-     * @throws InvalidOperationException
+     * @throws InvalidOperation
      */
     public function subtract(self $credit): self
     {
         if ($credit->value > $this->value) {
-            throw InvalidOperationException::insufficientCredit($credit->value - $this->value);
+            throw InsufficientFunds::notEnough($credit->value - $this->value);
         }
 
         return new self($this->value - $credit->value);
     }
 
-    public function greaterThanOrEquals(self $credit): bool
-    {
-        return $this->value >= $credit->value;
-    }
-
     /**
-     * @throws InvalidOperationException
+     * @throws InvalidOperation
      */
     private function __construct(int $value)
     {
         if ($value < 0) {
-            throw InvalidOperationException::negativeCredit();
+            throw InvalidOperation::negativeCredit();
         }
 
         $this->value = $value;
