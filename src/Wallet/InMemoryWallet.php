@@ -8,20 +8,25 @@ use Damax\ChargeableApi\Credit;
 
 final class InMemoryWallet implements Wallet
 {
-    private $amount;
+    private $balance;
 
-    public function __construct(int $credit)
+    public function __construct(int $balance)
     {
-        $this->amount = Credit::fromInteger($credit);
+        $this->balance = Credit::fromInteger($balance);
+    }
+
+    public function balance(): Credit
+    {
+        return $this->balance;
     }
 
     public function deposit(Credit $credit): void
     {
-        $this->amount = $this->amount->add($credit);
+        $this->balance = $this->balance()->add($credit);
     }
 
     public function withdraw(Credit $credit): void
     {
-        $this->amount = $this->amount->subtract($credit);
+        $this->balance = $this->balance()->subtract($credit);
     }
 }

@@ -9,6 +9,8 @@ use Damax\ChargeableApi\InsufficientFunds;
 
 interface Wallet
 {
+    public function balance(): Credit;
+
     public function deposit(Credit $credit): void;
 
     /**

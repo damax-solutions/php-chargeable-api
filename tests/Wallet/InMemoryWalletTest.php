@@ -24,11 +24,19 @@ class InMemoryWalletTest extends TestCase
     /**
      * @test
      */
+    public function it_checks_balance()
+    {
+        $this->assertEquals(10, $this->wallet->balance()->toInteger());
+    }
+
+    /**
+     * @test
+     */
     public function it_deposits_credit()
     {
         $this->wallet->deposit(Credit::fromInteger(5));
 
-        $this->assertAttributeEquals(Credit::fromInteger(15), 'amount', $this->wallet);
+        $this->assertEquals(15, $this->wallet->balance()->toInteger());
     }
 
     /**
@@ -38,7 +46,7 @@ class InMemoryWalletTest extends TestCase
     {
         $this->wallet->withdraw(Credit::fromInteger(10));
 
-        $this->assertAttributeEquals(Credit::blank(), 'amount', $this->wallet);
+        $this->assertEquals(0, $this->wallet->balance()->toInteger());
     }
 
     /**

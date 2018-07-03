@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Damax\ChargeableApi\Tests\Product;
 
-use Damax\ChargeableApi\Credit;
 use Damax\ChargeableApi\Product\SingleProductResolver;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class SingleProductResolverTest extends TestCase
 {
@@ -15,9 +15,11 @@ class SingleProductResolverTest extends TestCase
      */
     public function it_resolves_product()
     {
+        $request = new stdClass();
+
         $resolver = new SingleProductResolver('service', 10);
 
-        $this->assertEquals('service', $resolver->resolve(null)->name());
-        $this->assertEquals(Credit::fromInteger(10), $resolver->resolve(null)->price());
+        $this->assertEquals('service', $resolver->resolve($request)->name());
+        $this->assertEquals(10, $resolver->resolve($request)->price()->toInteger());
     }
 }
