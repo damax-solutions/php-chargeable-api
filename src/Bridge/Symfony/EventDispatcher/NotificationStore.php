@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Damax\ChargeableApi\Bridge\Symfony\EventDispatcher;
 
-use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\Event\PurchaseCompleted;
+use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\Event\PurchaseFinished;
 use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\Event\PurchaseRejected;
 use Damax\ChargeableApi\Identity\Identity;
 use Damax\ChargeableApi\InsufficientFunds;
@@ -34,7 +34,7 @@ final class NotificationStore implements Store
             throw $e;
         }
 
-        $this->dispatcher->dispatch(Events::PURCHASE_FINISHED, new PurchaseCompleted($receipt));
+        $this->dispatcher->dispatch(Events::PURCHASE_FINISHED, new PurchaseFinished($receipt));
 
         return $receipt;
     }

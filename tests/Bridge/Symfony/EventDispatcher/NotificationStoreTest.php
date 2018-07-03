@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Damax\ChargeableApi\Tests\Bridge\Symfony\EventDispatcher;
 
-use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\Event\PurchaseCompleted;
+use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\Event\PurchaseFinished;
 use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\Event\PurchaseRejected;
 use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\Events;
 use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\NotificationStore;
@@ -19,7 +19,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * @covers \Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\Event\PurchaseCompleted
+ * @covers \Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\Event\PurchaseFinished
  * @covers \Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\Event\PurchaseRejected
  * @covers \Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\NotificationStore
  */
@@ -50,7 +50,7 @@ class NotificationStoreTest extends TestCase
     /**
      * @test
      */
-    public function it_emits_finished_purchase_event()
+    public function it_emits_purchase_finished_event()
     {
         $identity = new UserIdentity('john.doe');
         $product = new Product('service', 10);
@@ -62,10 +62,10 @@ class NotificationStoreTest extends TestCase
             ->willReturn($receipt = new Receipt($identity, $product))
         ;
 
-        /** @var PurchaseCompleted $finishedEvent */
+        /** @var PurchaseFinished $finishedEvent */
         $finishedEvent = null;
 
-        $this->dispatcher->addListener(Events::PURCHASE_FINISHED, function (PurchaseCompleted $event) use (&$finishedEvent) {
+        $this->dispatcher->addListener(Events::PURCHASE_FINISHED, function (PurchaseFinished $event) use (&$finishedEvent) {
             $finishedEvent = $event;
         });
         $this->dispatcher->addListener(Events::PURCHASE_REJECTED, function () {
@@ -74,7 +74,7 @@ class NotificationStoreTest extends TestCase
 
         $this->assertSame($receipt, $this->store->purchase($identity, $product));
 
-        $this->assertInstanceOf(PurchaseCompleted::class, $finishedEvent);
+        $this->assertInstanceOf(PurchaseFinished::class, $finishedEvent);
         $this->assertSame($receipt, $finishedEvent->receipt());
         $this->assertSame($identity, $finishedEvent->identity());
         $this->assertSame($product, $finishedEvent->product());
@@ -83,7 +83,7 @@ class NotificationStoreTest extends TestCase
     /**
      * @test
      */
-    public function it_emits_rejected_purchase_event()
+    public function it_emits_purchase_rejected_event()
     {
         $identity = new UserIdentity('john.doe');
         $product = new Product('service', 10);

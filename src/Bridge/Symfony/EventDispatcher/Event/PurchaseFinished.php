@@ -9,7 +9,7 @@ use Damax\ChargeableApi\Product\Product;
 use Damax\ChargeableApi\Store\Receipt;
 use Symfony\Component\EventDispatcher\Event;
 
-final class PurchaseCompleted extends Event
+final class PurchaseFinished extends Event
 {
     private $receipt;
 
