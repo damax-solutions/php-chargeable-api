@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Damax\ChargeableApi\Bridge\Symfony;
+namespace Damax\ChargeableApi\Bridge\Symfony\Security;
 
 use Damax\ChargeableApi\Identity\Identity;
 use Damax\ChargeableApi\Identity\IdentityFactory;
 use Damax\ChargeableApi\Identity\UserIdentity;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class SecurityIdentityFactory implements IdentityFactory
+class TokenIdentityFactory implements IdentityFactory
 {
     private $tokenStorage;
 

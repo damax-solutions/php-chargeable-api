@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Damax\ChargeableApi\Bridge\Symfony;
+namespace Damax\ChargeableApi\Bridge\Symfony\HttpFoundation;
 
 use Damax\ChargeableApi\Product\Product;
 use Damax\ChargeableApi\Product\ProductResolutionFailed;

@@ -19,10 +19,8 @@ final class WalletStore implements Store
 
     public function purchase(Identity $identity, Product $product): Receipt
     {
-        $amount = $product->price();
+        $this->walletFactory->create($identity)->withdraw($product->price());
 
-        $this->walletFactory->create($identity)->withdraw($amount);
-
-        return new Receipt($identity, $amount);
+        return new Receipt($identity, $product);
     }
 }

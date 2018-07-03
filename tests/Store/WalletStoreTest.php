@@ -31,10 +31,13 @@ class WalletStoreTest extends TestCase
      */
     public function it_purchases_product()
     {
-        $receipt = $this->store->purchase(new UserIdentity('john.doe'), new Product('service', 5));
+        $receipt = $this->store->purchase(
+            $identity = new UserIdentity('john.doe'),
+            $product = new Product('service', 5)
+        );
 
-        $this->assertEquals('john.doe', (string) $receipt->identity());
-        $this->assertEquals(5, $receipt->amount()->toInteger());
+        $this->assertSame($identity, $receipt->identity());
+        $this->assertSame($product, $receipt->product());
     }
 
     /**

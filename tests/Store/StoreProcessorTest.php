@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Damax\ChargeableApi\Tests\Store;
 
-use Damax\ChargeableApi\Credit;
 use Damax\ChargeableApi\Identity\IdentityFactory;
 use Damax\ChargeableApi\Identity\UserIdentity;
 use Damax\ChargeableApi\Product\Product;
@@ -71,7 +70,7 @@ class StoreProcessorTest extends TestCase
             ->expects($this->once())
             ->method('purchase')
             ->with($this->identicalTo($identity), $this->identicalTo($product))
-            ->willReturn(new Receipt($identity, Credit::fromInteger(10)))
+            ->willReturn(new Receipt($identity, $product))
         ;
 
         $this->processor->processRequest($request);

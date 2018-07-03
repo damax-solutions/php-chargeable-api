@@ -6,19 +6,20 @@ namespace Damax\ChargeableApi\Store;
 
 use Damax\ChargeableApi\Credit;
 use Damax\ChargeableApi\Identity\Identity;
+use Damax\ChargeableApi\Product\Product;
 use DateTimeImmutable;
 use DateTimeInterface;
 
 final class Receipt
 {
     private $identity;
-    private $amount;
+    private $product;
     private $date;
 
-    public function __construct(Identity $identity, Credit $amount, DateTimeInterface $date = null)
+    public function __construct(Identity $identity, Product $product, DateTimeInterface $date = null)
     {
         $this->identity = $identity;
-        $this->amount = $amount;
+        $this->product = $product;
         $this->date = $date ?? new DateTimeImmutable();
     }
 
@@ -27,9 +28,14 @@ final class Receipt
         return $this->identity;
     }
 
-    public function amount(): Credit
+    public function product(): Product
     {
-        return $this->amount;
+        return $this->product;
+    }
+
+    public function price(): Credit
+    {
+        return $this->product->price();
     }
 
     public function date(): DateTimeInterface

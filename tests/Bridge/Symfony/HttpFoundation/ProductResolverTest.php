@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Damax\ChargeableApi\Tests\Bridge\Symfony;
+namespace Damax\ChargeableApi\Tests\Bridge\Symfony\HttpFoundation;
 
-use Damax\ChargeableApi\Bridge\Symfony\ProductResolver;
+use Damax\ChargeableApi\Bridge\Symfony\HttpFoundation\ProductResolver;
 use Damax\ChargeableApi\Product\Product;
 use Damax\ChargeableApi\Product\ProductResolutionFailed;
 use PHPUnit\Framework\MockObject\MockObject;
