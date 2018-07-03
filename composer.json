@@ -1,7 +1,7 @@
 {
   "name": "damax/chargeable-api",
   "type": "library",
-  "description": "Charge credit for your API.",
+  "description": "Charge credit for API calls.",
   "license": "MIT",
   "autoload": {
     "psr-4": { "Damax\\ChargeableApi\\": "src" }

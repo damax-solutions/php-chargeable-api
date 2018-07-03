@@ -17,7 +17,7 @@ class CreditTest extends TestCase
     {
         $credit = Credit::blank();
 
-        $this->assertAttributeEquals(0, 'value', $credit);
+        $this->assertEquals(0, $credit->toInteger());
 
         return $credit;
     }
@@ -31,7 +31,7 @@ class CreditTest extends TestCase
     {
         $newCredit = $credit->add(Credit::fromInteger(10));
 
-        $this->assertAttributeEquals(10, 'value', $newCredit);
+        $this->assertEquals(10, $newCredit->toInteger());
     }
 
     /**
@@ -53,7 +53,7 @@ class CreditTest extends TestCase
         $one = Credit::fromInteger(20);
         $two = Credit::fromInteger(5);
 
-        $this->assertAttributeEquals(15, 'value', $one->subtract($two));
+        $this->assertEquals(15, $one->subtract($two)->toInteger());
 
         $this->expectException(InvalidOperation::class);
         $this->expectExceptionMessage('Insufficient credit: 15.');

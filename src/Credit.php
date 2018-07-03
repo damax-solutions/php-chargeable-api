@@ -35,6 +35,11 @@ final class Credit
         return new self($this->value - $credit->value);
     }
 
+    public function toInteger(): int
+    {
+        return $this->value;
+    }
+
     /**
      * @throws InvalidOperation
      */

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Damax\ChargeableApi\Product;
 
-use Damax\ChargeableApi\Credit;
-
-final class Product
+final class SingleProductResolver implements Resolver
 {
     private $name;
     private $price;
@@ -17,13 +15,8 @@ final class Product
         $this->price = $price;
     }
 
-    public function name(): string
+    public function resolve($request): Product
     {
-        return $this->name;
-    }
-
-    public function price(): Credit
-    {
-        return Credit::fromInteger($this->price);
+        return new Product($this->name, $this->price);
     }
 }
