@@ -74,6 +74,6 @@ class StoreProcessorTest extends TestCase
             ->willReturn(new Receipt($identity, Credit::fromInteger(10)))
         ;
 
-        $this->processor->processPayment($request);
+        $this->processor->processRequest($request);
     }
 }

@@ -22,11 +22,11 @@ final class InMemoryWallet implements Wallet
 
     public function deposit(Credit $credit): void
     {
-        $this->balance = $this->balance()->add($credit);
+        $this->balance = $this->balance->add($credit);
     }
 
     public function withdraw(Credit $credit): void
     {
-        $this->balance = $this->balance()->subtract($credit);
+        $this->balance = $this->balance->subtract($credit);
     }
 }

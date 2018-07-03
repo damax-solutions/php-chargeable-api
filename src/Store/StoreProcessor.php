@@ -27,7 +27,7 @@ class StoreProcessor implements Processor
      * @throws ProductResolutionFailed
      * @throws InsufficientFunds
      */
-    public function processPayment($request): void
+    public function processRequest($request): void
     {
         $this->store->purchase($this->identityFactory->create(), $this->productResolver->resolve($request));
     }

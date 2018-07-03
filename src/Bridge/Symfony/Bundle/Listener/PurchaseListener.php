@@ -32,7 +32,7 @@ class PurchaseListener
         }
 
         try {
-            $this->processor->purchase($request);
+            $this->processor->processRequest($request);
         } catch (InsufficientFunds $e) {
             $event->setResponse(Response::create('', Response::HTTP_PAYMENT_REQUIRED));
         } catch (Throwable $e) {

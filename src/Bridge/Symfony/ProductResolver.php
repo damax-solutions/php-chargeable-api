@@ -12,15 +12,7 @@ use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 
 final class ProductResolver implements Resolver
 {
-    /**
-     * @var Product[]
-     */
     private $products = [];
-
-    /**
-     * @var RequestMatcherInterface[]
-     */
-    private $matchers = [];
 
     public function addProduct(Product $product, RequestMatcherInterface $matcher): void
     {
@@ -34,7 +26,7 @@ final class ProductResolver implements Resolver
      */
     public function resolve($request): Product
     {
-        foreach ($this->matchers as list($product, $matcher)) {
+        foreach ($this->products as list($product, $matcher)) {
             if ($matcher->matches($request)) {
                 return $product;
             }

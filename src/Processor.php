@@ -9,5 +9,5 @@ interface Processor
     /**
      * @throws InsufficientFunds
      */
-    public function processPayment($request): void;
+    public function processRequest($request): void;
 }

@@ -24,7 +24,7 @@ class InMemoryWalletTest extends TestCase
     /**
      * @test
      */
-    public function it_checks_balance()
+    public function it_retrieves_balance()
     {
         $this->assertEquals(10, $this->wallet->balance()->toInteger());
     }
