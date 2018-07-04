@@ -53,7 +53,7 @@ class NotificationStoreTest extends TestCase
     public function it_emits_purchase_finished_event()
     {
         $identity = new UserIdentity('john.doe');
-        $product = new Product('service', 10);
+        $product = new Product('API', 10);
 
         $this->decorated
             ->expects($this->once())
@@ -86,7 +86,7 @@ class NotificationStoreTest extends TestCase
     public function it_emits_purchase_rejected_event()
     {
         $identity = new UserIdentity('john.doe');
-        $product = new Product('service', 10);
+        $product = new Product('API', 10);
 
         $this->decorated
             ->expects($this->once())

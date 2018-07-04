@@ -27,6 +27,7 @@ final class Configuration implements ConfigurationInterface
             ->children()
                 ->append($this->walletNode('wallet'))
                 ->append($this->identityNode('identity'))
+                ->append($this->productNode('product'))
             ->end()
         ;
 
@@ -105,6 +106,42 @@ final class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('identity')->cannotBeEmpty()->end()
                 ->scalarNode('factory_service_id')->cannotBeEmpty()->end()
+            ->end()
+        ;
+    }
+
+    private function productNode(string $name): ArrayNodeDefinition
+    {
+        return (new ArrayNodeDefinition($name))
+            ->addDefaultsIfNotSet()
+            ->beforeNormalization()
+                ->ifString()
+                ->then(function (string $config): array {
+                    return ['default' => ['name' => $config]];
+                })
+            ->end()
+            ->beforeNormalization()
+                ->ifTrue(function ($config): bool {
+                    return is_numeric($config);
+                })
+                ->then(function (int $config): array {
+                    return ['default' => ['price' => $config]];
+                })
+            ->end()
+            ->children()
+                ->arrayNode('default')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('name')
+                            ->cannotBeEmpty()
+                            ->defaultValue('API')
+                        ->end()
+                        ->integerNode('price')
+                            ->min(1)
+                            ->defaultValue(1)
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
     }

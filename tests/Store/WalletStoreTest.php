@@ -33,7 +33,7 @@ class WalletStoreTest extends TestCase
     {
         $receipt = $this->store->purchase(
             $identity = new UserIdentity('john.doe'),
-            $product = new Product('service', 5)
+            $product = new Product('API', 5)
         );
 
         $this->assertSame($identity, $receipt->identity());

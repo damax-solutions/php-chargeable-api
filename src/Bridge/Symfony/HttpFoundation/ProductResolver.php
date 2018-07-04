@@ -32,6 +32,6 @@ final class ProductResolver implements Resolver
             }
         }
 
-        throw new ProductResolutionFailed('Unable to resolve product.');
+        throw ProductResolutionFailed::unresolved();
     }
 }

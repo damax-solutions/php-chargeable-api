@@ -87,13 +87,11 @@ class ProductResolverTest extends TestCase
     /**
      * @test
      */
-    public function it_resolves_no_product()
+    public function it_fails_to_resolve_a_product()
     {
-        $request = new Request();
-
         $this->expectException(ProductResolutionFailed::class);
         $this->expectExceptionMessage('Unable to resolve product.');
 
-        $this->resolver->resolve($request);
+        $this->resolver->resolve(new Request());
     }
 }

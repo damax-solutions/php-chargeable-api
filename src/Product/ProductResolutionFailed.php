@@ -8,4 +8,8 @@ use RuntimeException;
 
 final class ProductResolutionFailed extends RuntimeException
 {
+    public static function unresolved(): self
+    {
+        return new self('Unable to resolve product.');
+    }
 }

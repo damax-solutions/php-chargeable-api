@@ -28,6 +28,12 @@ class ConfigurationTest extends TestCase
             'identity' => [
                 'type' => 'security',
             ],
+            'product' => [
+                'default' => [
+                    'name' => 'API',
+                    'price' => 1,
+                ],
+            ],
         ]);
     }
 
@@ -209,6 +215,44 @@ class ConfigurationTest extends TestCase
                 'factory_service_id' => 'custom_identity_factory',
             ],
         ], 'identity');
+    }
+
+    /**
+     * @test
+     */
+    public function it_processes_simplified_product_name_config()
+    {
+        $config = [
+            'product' => 'Service',
+        ];
+
+        $this->assertProcessedConfigurationEquals([$config], [
+            'product' => [
+                'default' => [
+                    'name' => 'Service',
+                    'price' => 1,
+                ],
+            ],
+        ], 'product');
+    }
+
+    /**
+     * @test
+     */
+    public function it_processes_simplified_product_price_config()
+    {
+        $config = [
+            'product' => 10,
+        ];
+
+        $this->assertProcessedConfigurationEquals([$config], [
+            'product' => [
+                'default' => [
+                    'name' => 'API',
+                    'price' => 10,
+                ],
+            ],
+        ], 'product');
     }
 
     protected function getConfiguration(): ConfigurationInterface

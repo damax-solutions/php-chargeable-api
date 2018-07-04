@@ -18,7 +18,7 @@ class ReceiptTest extends TestCase
     public function it_creates_receipt()
     {
         $identity = new UserIdentity('john.doe');
-        $product = new Product('service', 10);
+        $product = new Product('API', 10);
         $dateTime = new DateTimeImmutable();
         $receipt = new Receipt($identity, $product, $dateTime);
 

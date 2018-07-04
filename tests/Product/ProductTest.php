@@ -14,9 +14,9 @@ class ProductTest extends TestCase
      */
     public function it_creates_product()
     {
-        $product = new Product('service', 10);
+        $product = new Product('API', 10);
 
-        $this->assertEquals('service', $product->name());
+        $this->assertEquals('API', $product->name());
         $this->assertSame(10, $product->price()->toInteger());
     }
 }
