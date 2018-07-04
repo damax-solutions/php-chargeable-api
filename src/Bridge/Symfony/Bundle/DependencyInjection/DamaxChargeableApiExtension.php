@@ -54,7 +54,7 @@ final class DamaxChargeableApiExtension extends ConfigurableExtension
                 $container
                     ->register(WalletFactory::class, RedisWalletFactory::class)
                     ->addArgument(new Reference($config['redis_client_id']))
-                    ->addArgument(new Reference($config['wallet_key']))
+                    ->addArgument($config['wallet_key'])
                 ;
                 break;
             case Configuration::WALLET_SERVICE:
