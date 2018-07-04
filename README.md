@@ -4,10 +4,6 @@
 
 Charge credit for API calls.
 
-```
-This library is work in progress. Use at your own risk!
-```
-
 ## Documentation
 
 Topics:

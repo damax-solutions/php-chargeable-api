@@ -22,7 +22,7 @@ class WalletBalanceCommandTest extends WalletCommandTestCase
     /**
      * @test
      */
-    public function it_fetches_balance()
+    public function it_retrieves_balance()
     {
         $code = $this->tester->execute([
             'command' => 'damax:chargeable-api:wallet:balance',
