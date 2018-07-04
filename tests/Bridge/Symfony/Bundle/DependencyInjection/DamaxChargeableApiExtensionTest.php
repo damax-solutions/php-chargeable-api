@@ -6,6 +6,9 @@ namespace Damax\ChargeableApi\Tests\Bridge\Symfony\Bundle\DependencyInject;
 
 use Damax\ChargeableApi\Bridge\Symfony\Bundle\DependencyInjection\DamaxChargeableApiExtension;
 use Damax\ChargeableApi\Bridge\Symfony\Bundle\Listener\PurchaseListener;
+use Damax\ChargeableApi\Bridge\Symfony\Console\Command\WalletBalanceCommand;
+use Damax\ChargeableApi\Bridge\Symfony\Console\Command\WalletDepositCommand;
+use Damax\ChargeableApi\Bridge\Symfony\Console\Command\WalletWithdrawCommand;
 use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\NotificationStore;
 use Damax\ChargeableApi\Bridge\Symfony\Security\TokenIdentityFactory;
 use Damax\ChargeableApi\Identity\FixedIdentityFactory;
@@ -162,6 +165,18 @@ class DamaxChargeableApiExtensionTest extends AbstractExtensionTestCase
         $this->assertNull($matcher->getArgument(1)); // Host
         $this->assertNull($matcher->getArgument(2)); // Methods
         $this->assertNull($matcher->getArgument(3)); // IPs
+    }
+
+    /**
+     * @test
+     */
+    public function it_registers_console_commands()
+    {
+        $this->load([]);
+
+        $this->assertContainerBuilderHasService(WalletBalanceCommand::class);
+        $this->assertContainerBuilderHasService(WalletDepositCommand::class);
+        $this->assertContainerBuilderHasService(WalletWithdrawCommand::class);
     }
 
     protected function getContainerExtensions(): array
