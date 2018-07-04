@@ -34,6 +34,9 @@ class ConfigurationTest extends TestCase
                     'price' => 1,
                 ],
             ],
+            'listener' => [
+                'priority' => 4,
+            ],
         ]);
     }
 
@@ -253,6 +256,20 @@ class ConfigurationTest extends TestCase
                 ],
             ],
         ], 'product');
+    }
+
+    /**
+     * @test
+     */
+    public function it_configures_listener()
+    {
+        $config = [
+            'listener' => ['priority' => 7],
+        ];
+
+        $this->assertProcessedConfigurationEquals([$config], [
+            'listener' => ['priority' => 7],
+        ], 'listener');
     }
 
     protected function getConfiguration(): ConfigurationInterface

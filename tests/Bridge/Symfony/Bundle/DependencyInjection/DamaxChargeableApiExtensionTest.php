@@ -5,10 +5,15 @@ declare(strict_types=1);
 namespace Damax\ChargeableApi\Tests\Bridge\Symfony\Bundle\DependencyInject;
 
 use Damax\ChargeableApi\Bridge\Symfony\Bundle\DependencyInjection\DamaxChargeableApiExtension;
+use Damax\ChargeableApi\Bridge\Symfony\Bundle\Listener\PurchaseListener;
+use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\NotificationStore;
 use Damax\ChargeableApi\Bridge\Symfony\Security\TokenIdentityFactory;
 use Damax\ChargeableApi\Identity\FixedIdentityFactory;
 use Damax\ChargeableApi\Identity\IdentityFactory;
+use Damax\ChargeableApi\Processor;
 use Damax\ChargeableApi\Product\FixedProductResolver;
+use Damax\ChargeableApi\Store\Store;
+use Damax\ChargeableApi\Store\StoreProcessor;
 use Damax\ChargeableApi\Wallet\InMemoryWalletFactory;
 use Damax\ChargeableApi\Wallet\RedisWalletFactory;
 use Damax\ChargeableApi\Wallet\WalletFactory;
@@ -116,6 +121,35 @@ class DamaxChargeableApiExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(FixedProductResolver::class, 0, 'API');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(FixedProductResolver::class, 1, 5);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(FixedProductResolver::class, 'damax.chargeable_api.product_resolver', ['priority' => -1024]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_registers_store_services()
+    {
+        $this->load();
+
+        $this->assertContainerBuilderHasService(Store::class, NotificationStore::class);
+        $this->assertContainerBuilderHasService(Processor::class, StoreProcessor::class);
+    }
+
+    /**
+     * @test
+     */
+    public function it_registers_listener()
+    {
+        $this->load([
+            'listener' => [
+                'priority' => 6,
+            ],
+        ]);
+
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(PurchaseListener::class, 'kernel.event_listener', [
+            'event' => 'kernel.request',
+            'method' => 'onKernelRequest',
+            'priority' => 6,
+        ]);
     }
 
     protected function getContainerExtensions(): array

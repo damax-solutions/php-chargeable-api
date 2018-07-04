@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace Damax\ChargeableApi\Bridge\Symfony\Bundle\DependencyInjection;
 
+use Damax\ChargeableApi\Bridge\Symfony\Bundle\Listener\PurchaseListener;
+use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\NotificationStore;
 use Damax\ChargeableApi\Bridge\Symfony\Security\TokenIdentityFactory;
 use Damax\ChargeableApi\Identity\FixedIdentityFactory;
 use Damax\ChargeableApi\Identity\IdentityFactory;
+use Damax\ChargeableApi\Processor;
 use Damax\ChargeableApi\Product\FixedProductResolver;
+use Damax\ChargeableApi\Store\Store;
+use Damax\ChargeableApi\Store\StoreProcessor;
+use Damax\ChargeableApi\Store\WalletStore;
 use Damax\ChargeableApi\Wallet\InMemoryWalletFactory;
 use Damax\ChargeableApi\Wallet\RedisWalletFactory;
 use Damax\ChargeableApi\Wallet\WalletFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
@@ -23,6 +30,8 @@ final class DamaxChargeableApiExtension extends ConfigurableExtension
             ->configureWallet($config['wallet'], $container)
             ->configureIdentity($config['identity'], $container)
             ->configureProduct($config['product'], $container)
+            ->configureListener($config['listener'], $container)
+            ->configureStore($container)
         ;
     }
 
@@ -78,6 +87,34 @@ final class DamaxChargeableApiExtension extends ConfigurableExtension
             ->addArgument($config['default']['price'])
             ->addTag('damax.chargeable_api.product_resolver', ['priority' => -1024])
         ;
+
+        return $this;
+    }
+
+    private function configureListener(array $config, ContainerBuilder $container): self
+    {
+        $container
+            ->autowire(PurchaseListener::class)
+            ->addTag('kernel.event_listener', [
+                'event' => 'kernel.request',
+                'method' => 'onKernelRequest',
+                'priority' => $config['priority'],
+            ])
+        ;
+
+        return $this;
+    }
+
+    private function configureStore(ContainerBuilder $container): self
+    {
+        // Decorated store.
+        $store = (new Definition(WalletStore::class))->setAutowired(true);
+
+        $container
+            ->autowire(Store::class, NotificationStore::class)
+            ->addArgument($store)
+        ;
+        $container->autowire(Processor::class, StoreProcessor::class);
 
         return $this;
     }

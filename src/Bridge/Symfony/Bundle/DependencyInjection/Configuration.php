@@ -28,6 +28,7 @@ final class Configuration implements ConfigurationInterface
                 ->append($this->walletNode('wallet'))
                 ->append($this->identityNode('identity'))
                 ->append($this->productNode('product'))
+                ->append($this->listenerNode('listener'))
             ->end()
         ;
 
@@ -141,6 +142,19 @@ final class Configuration implements ConfigurationInterface
                             ->defaultValue(1)
                         ->end()
                     ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function listenerNode(string $name): ArrayNodeDefinition
+    {
+        return (new ArrayNodeDefinition($name))
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->integerNode('priority')
+                    ->max(7)
+                    ->defaultValue(4)
                 ->end()
             ->end()
         ;
