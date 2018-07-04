@@ -1,0 +1,24 @@
+sudo: false
+
+language: php
+
+php:
+    - 7.1
+    - 7.2
+
+env:
+    global:
+        - SYMFONY_PHPUNIT_VERSION=6.5
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+
+install:
+    - composer install --prefer-dist
+
+script:
+    - composer test-ci
+
+after_script:
+    - composer test-publish

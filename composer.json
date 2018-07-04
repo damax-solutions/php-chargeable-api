@@ -15,6 +15,7 @@
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.10",
     "matthiasnoback/symfony-dependency-injection-test": "^3.0",
+    "php-coveralls/php-coveralls": "^2.1",
     "predis/predis": "^1.1",
     "symfony/config": "^4.1",
     "symfony/phpunit-bridge": "^4.0",
@@ -23,7 +24,9 @@
   "scripts": {
     "cs": "php-cs-fixer fix",
     "test": "simple-phpunit",
-    "test-cc": "./bin/phpunit-coverage"
+    "test-cc": "./bin/phpunit-coverage",
+    "test-ci": "simple-phpunit --coverage-clover=build/logs/clover.xml",
+    "test-publish": "php-coveralls"
   },
   "config": {
     "sort-packages": true

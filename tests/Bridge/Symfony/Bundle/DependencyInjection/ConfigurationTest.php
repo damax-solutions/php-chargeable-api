@@ -89,7 +89,7 @@ class ConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function it_requires_wallet_key_for_redis_wallet()
+    public function it_requires_necessary_config_for_redis_wallet()
     {
         $config = [
             'wallet' => [
