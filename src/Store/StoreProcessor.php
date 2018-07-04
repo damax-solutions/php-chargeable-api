@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Damax\ChargeableApi\Store;
 
-use Damax\ChargeableApi\Identity\identityFactory;
+use Damax\ChargeableApi\Identity\IdentityFactory;
 use Damax\ChargeableApi\InsufficientFunds;
 use Damax\ChargeableApi\Processor;
 use Damax\ChargeableApi\Product\ProductResolutionFailed;
