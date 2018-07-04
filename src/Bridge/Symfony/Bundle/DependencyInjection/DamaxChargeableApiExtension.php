@@ -110,8 +110,9 @@ final class DamaxChargeableApiExtension extends ConfigurableExtension
         ;
 
         $container
-            ->autowire(PurchaseListener::class)
+            ->register(PurchaseListener::class)
             ->addArgument($matcher)
+            ->addArgument(new Reference(Processor::class))
             ->addTag('kernel.event_listener', [
                 'event' => 'kernel.request',
                 'method' => 'onKernelRequest',
