@@ -7,6 +7,7 @@ namespace Damax\ChargeableApi\Bridge\Symfony\Bundle\DependencyInjection;
 use Damax\ChargeableApi\Bridge\Symfony\Security\TokenIdentityFactory;
 use Damax\ChargeableApi\Identity\FixedIdentityFactory;
 use Damax\ChargeableApi\Identity\IdentityFactory;
+use Damax\ChargeableApi\Product\FixedProductResolver;
 use Damax\ChargeableApi\Wallet\InMemoryWalletFactory;
 use Damax\ChargeableApi\Wallet\RedisWalletFactory;
 use Damax\ChargeableApi\Wallet\WalletFactory;
@@ -21,6 +22,7 @@ final class DamaxChargeableApiExtension extends ConfigurableExtension
         $this
             ->configureWallet($config['wallet'], $container)
             ->configureIdentity($config['identity'], $container)
+            ->configureProduct($config['product'], $container)
         ;
     }
 
@@ -64,6 +66,18 @@ final class DamaxChargeableApiExtension extends ConfigurableExtension
                 $container->setAlias(IdentityFactory::class, $config['factory_service_id']);
                 break;
         }
+
+        return $this;
+    }
+
+    private function configureProduct(array $config, ContainerBuilder $container): self
+    {
+        $container
+            ->register(FixedProductResolver::class)
+            ->addArgument($config['default']['name'])
+            ->addArgument($config['default']['price'])
+            ->addTag('damax.chargeable_api.product_resolver', ['priority' => -1024])
+        ;
 
         return $this;
     }

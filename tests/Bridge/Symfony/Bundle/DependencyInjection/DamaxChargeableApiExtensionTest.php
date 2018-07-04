@@ -8,6 +8,7 @@ use Damax\ChargeableApi\Bridge\Symfony\Bundle\DependencyInjection\DamaxChargeabl
 use Damax\ChargeableApi\Bridge\Symfony\Security\TokenIdentityFactory;
 use Damax\ChargeableApi\Identity\FixedIdentityFactory;
 use Damax\ChargeableApi\Identity\IdentityFactory;
+use Damax\ChargeableApi\Product\FixedProductResolver;
 use Damax\ChargeableApi\Wallet\InMemoryWalletFactory;
 use Damax\ChargeableApi\Wallet\RedisWalletFactory;
 use Damax\ChargeableApi\Wallet\WalletFactory;
@@ -102,6 +103,19 @@ class DamaxChargeableApiExtensionTest extends AbstractExtensionTestCase
         ]);
 
         $this->assertContainerBuilderHasAlias(IdentityFactory::class, 'identity_factory_service');
+    }
+
+    /**
+     * @test
+     */
+    public function it_registers_default_product_resolver()
+    {
+        $this->load(['product' => 5]);
+
+        $this->assertContainerBuilderHasService(FixedProductResolver::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(FixedProductResolver::class, 0, 'API');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(FixedProductResolver::class, 1, 5);
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(FixedProductResolver::class, 'damax.chargeable_api.product_resolver', ['priority' => -1024]);
     }
 
     protected function getContainerExtensions(): array
