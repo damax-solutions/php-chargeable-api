@@ -18,7 +18,9 @@ use Damax\ChargeableApi\Wallet\InMemoryWalletFactory;
 use Damax\ChargeableApi\Wallet\RedisWalletFactory;
 use Damax\ChargeableApi\Wallet\WalletFactory;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpFoundation\RequestMatcher;
 
 class DamaxChargeableApiExtensionTest extends AbstractExtensionTestCase
 {
@@ -142,6 +144,7 @@ class DamaxChargeableApiExtensionTest extends AbstractExtensionTestCase
         $this->load([
             'listener' => [
                 'priority' => 6,
+                'matcher' => '^/api/',
             ],
         ]);
 
@@ -150,6 +153,15 @@ class DamaxChargeableApiExtensionTest extends AbstractExtensionTestCase
             'method' => 'onKernelRequest',
             'priority' => 6,
         ]);
+
+        /** @var Definition $matcher */
+        $matcher = $this->container->getDefinition(PurchaseListener::class)->getArgument(0);
+
+        $this->assertEquals(RequestMatcher::class, $matcher->getClass());
+        $this->assertEquals('^/api/', $matcher->getArgument(0));
+        $this->assertNull($matcher->getArgument(1)); // Host
+        $this->assertNull($matcher->getArgument(2)); // Methods
+        $this->assertNull($matcher->getArgument(3)); // IPs
     }
 
     protected function getContainerExtensions(): array

@@ -36,6 +36,9 @@ class ConfigurationTest extends TestCase
             ],
             'listener' => [
                 'priority' => 4,
+                'matcher' => [
+                    'ips' => [],
+                ],
             ],
         ]);
     }
@@ -261,14 +264,48 @@ class ConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function it_configures_listener()
+    public function it_processes_simplified_listener_matcher_config()
     {
         $config = [
-            'listener' => ['priority' => 7],
+            'listener' => [
+                'matcher' => '^/api/',
+            ],
         ];
 
         $this->assertProcessedConfigurationEquals([$config], [
-            'listener' => ['priority' => 7],
+            'listener' => [
+                'priority' => 4,
+                'matcher' => [
+                    'path' => '^/api/',
+                    'ips' => [],
+                ],
+            ],
+        ], 'listener');
+    }
+
+    /**
+     * @test
+     */
+    public function it_configures_listener()
+    {
+        $config = [
+            'listener' => [
+                'priority' => 7,
+                'matcher' => [
+                    'path' => '^/api/',
+                    'ips' => ['192.168.1.2', '192.168.1.3'],
+                ],
+            ],
+        ];
+
+        $this->assertProcessedConfigurationEquals([$config], [
+            'listener' => [
+                'priority' => 7,
+                'matcher' => [
+                    'path' => '^/api/',
+                    'ips' => ['192.168.1.2', '192.168.1.3'],
+                ],
+            ],
         ], 'listener');
     }
 

@@ -20,6 +20,7 @@ use Damax\ChargeableApi\Wallet\WalletFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 final class DamaxChargeableApiExtension extends ConfigurableExtension
@@ -93,8 +94,19 @@ final class DamaxChargeableApiExtension extends ConfigurableExtension
 
     private function configureListener(array $config, ContainerBuilder $container): self
     {
+        $ips = !empty($config['matcher']['ips']) ? $config['matcher']['ips'] : null;
+        $methods = !empty($config['matcher']['methods']) ? $config['matcher']['methods'] : null;
+
+        $matcher = (new Definition(RequestMatcher::class))
+            ->addArgument($config['matcher']['path'] ?? null)
+            ->addArgument($config['matcher']['host'] ?? null)
+            ->addArgument($methods)
+            ->addArgument($ips)
+        ;
+
         $container
             ->autowire(PurchaseListener::class)
+            ->addArgument($matcher)
             ->addTag('kernel.event_listener', [
                 'event' => 'kernel.request',
                 'method' => 'onKernelRequest',

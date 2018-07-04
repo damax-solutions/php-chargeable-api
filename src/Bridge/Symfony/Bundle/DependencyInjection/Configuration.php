@@ -156,6 +156,23 @@ final class Configuration implements ConfigurationInterface
                     ->max(7)
                     ->defaultValue(4)
                 ->end()
+                ->arrayNode('matcher')
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(function (string $config): array {
+                            return ['path' => $config];
+                        })
+                    ->end()
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('path')
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->arrayNode('ips')
+                            ->scalarPrototype()->cannotBeEmpty()->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
     }
