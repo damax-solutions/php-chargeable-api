@@ -24,7 +24,7 @@ final class RedisWallet implements Wallet
     {
         $balance = $this->client->hget($this->walletKey, $this->identity) ?? 0;
 
-        return Credit::fromInteger($balance);
+        return Credit::fromInteger((int) $balance);
     }
 
     public function deposit(Credit $credit): void
