@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Damax\ChargeableApi\Product;
 
-final class SingleProductResolver implements Resolver
+final class FixedProductResolver implements Resolver
 {
     private $name;
     private $price;

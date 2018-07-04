@@ -14,6 +14,10 @@ final class Configuration implements ConfigurationInterface
     public const WALLET_REDIS = 'redis';
     public const WALLET_SERVICE = 'service';
 
+    public const IDENTITY_FIXED = 'fixed';
+    public const IDENTITY_SECURITY = 'security';
+    public const IDENTITY_SERVICE = 'service';
+
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
@@ -22,6 +26,7 @@ final class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->append($this->walletNode('wallet'))
+                ->append($this->identityNode('identity'))
             ->end()
         ;
 
@@ -57,9 +62,9 @@ final class Configuration implements ConfigurationInterface
                     ->values([self::WALLET_FIXED, self::WALLET_REDIS, self::WALLET_SERVICE])
                     ->defaultValue(self::WALLET_FIXED)
                 ->end()
-                ->scalarNode('redis_client_id')->end()
-                ->scalarNode('wallet_key')->end()
-                ->scalarNode('factory_service_id')->end()
+                ->scalarNode('redis_client_id')->cannotBeEmpty()->end()
+                ->scalarNode('wallet_key')->cannotBeEmpty()->end()
+                ->scalarNode('factory_service_id')->cannotBeEmpty()->end()
                 ->arrayNode('accounts')
                     ->useAttributeAsKey(true)
                     ->requiresAtLeastOneElement()
@@ -67,6 +72,39 @@ final class Configuration implements ConfigurationInterface
                         ->isRequired()
                     ->end()
                 ->end()
+            ->end()
+        ;
+    }
+
+    private function identityNode(string $name): ArrayNodeDefinition
+    {
+        return (new ArrayNodeDefinition($name))
+            ->addDefaultsIfNotSet()
+            ->beforeNormalization()
+                ->ifString()
+                ->then(function (string $config): array {
+                    return ['type' => self::IDENTITY_FIXED, 'identity' => $config];
+                })
+            ->end()
+            ->validate()
+                ->ifTrue(function (array $config): bool {
+                    return self::IDENTITY_SERVICE === $config['type'] && empty($config['factory_service_id']);
+                })
+                ->thenInvalid('Service id must be specified.')
+            ->end()
+            ->validate()
+                ->ifTrue(function (array $config): bool {
+                    return self::IDENTITY_FIXED === $config['type'] && empty($config['identity']);
+                })
+                ->thenInvalid('Identity must be specified.')
+            ->end()
+            ->children()
+                ->enumNode('type')
+                    ->values([self::IDENTITY_FIXED, self::IDENTITY_SECURITY, self::IDENTITY_SERVICE])
+                    ->defaultValue(self::IDENTITY_SECURITY)
+                ->end()
+                ->scalarNode('identity')->cannotBeEmpty()->end()
+                ->scalarNode('factory_service_id')->cannotBeEmpty()->end()
             ->end()
         ;
     }

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Damax\ChargeableApi\Bridge\Symfony\Bundle\DependencyInjection;
 
+use Damax\ChargeableApi\Bridge\Symfony\Security\TokenIdentityFactory;
+use Damax\ChargeableApi\Identity\FixedIdentityFactory;
+use Damax\ChargeableApi\Identity\IdentityFactory;
 use Damax\ChargeableApi\Wallet\InMemoryWalletFactory;
 use Damax\ChargeableApi\Wallet\RedisWalletFactory;
 use Damax\ChargeableApi\Wallet\WalletFactory;
@@ -15,7 +18,10 @@ final class DamaxChargeableApiExtension extends ConfigurableExtension
 {
     protected function loadInternal(array $config, ContainerBuilder $container)
     {
-        $this->configureWallet($config['wallet'], $container);
+        $this
+            ->configureWallet($config['wallet'], $container)
+            ->configureIdentity($config['identity'], $container)
+        ;
     }
 
     private function configureWallet(array $config, ContainerBuilder $container): self
@@ -36,6 +42,26 @@ final class DamaxChargeableApiExtension extends ConfigurableExtension
                 break;
             case Configuration::WALLET_SERVICE:
                 $container->setAlias(WalletFactory::class, $config['factory_service_id']);
+                break;
+        }
+
+        return $this;
+    }
+
+    private function configureIdentity(array $config, ContainerBuilder $container): self
+    {
+        switch ($config['type']) {
+            case Configuration::IDENTITY_FIXED:
+                $container
+                    ->register(IdentityFactory::class, FixedIdentityFactory::class)
+                    ->addArgument($config['identity'])
+                ;
+                break;
+            case Configuration::IDENTITY_SECURITY:
+                $container->autowire(IdentityFactory::class, TokenIdentityFactory::class);
+                break;
+            case Configuration::IDENTITY_SERVICE:
+                $container->setAlias(IdentityFactory::class, $config['factory_service_id']);
                 break;
         }
 

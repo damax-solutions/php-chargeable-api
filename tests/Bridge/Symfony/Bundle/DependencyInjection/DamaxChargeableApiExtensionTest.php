@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Damax\ChargeableApi\Tests\Bridge\Symfony\Bundle\DependencyInject;
 
 use Damax\ChargeableApi\Bridge\Symfony\Bundle\DependencyInjection\DamaxChargeableApiExtension;
+use Damax\ChargeableApi\Bridge\Symfony\Security\TokenIdentityFactory;
+use Damax\ChargeableApi\Identity\FixedIdentityFactory;
+use Damax\ChargeableApi\Identity\IdentityFactory;
 use Damax\ChargeableApi\Wallet\InMemoryWalletFactory;
 use Damax\ChargeableApi\Wallet\RedisWalletFactory;
 use Damax\ChargeableApi\Wallet\WalletFactory;
@@ -63,6 +66,42 @@ class DamaxChargeableApiExtensionTest extends AbstractExtensionTestCase
         ]);
 
         $this->assertContainerBuilderHasAlias(WalletFactory::class, 'wallet_factory_service');
+    }
+
+    /**
+     * @test
+     */
+    public function it_registers_security_identity()
+    {
+        $this->load();
+
+        $this->assertContainerBuilderHasService(IdentityFactory::class, TokenIdentityFactory::class);
+    }
+
+    /**
+     * @test
+     */
+    public function it_registers_fixed_identity()
+    {
+        $this->load(['identity' => 'john.doe']);
+
+        $this->assertContainerBuilderHasService(IdentityFactory::class, FixedIdentityFactory::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(IdentityFactory::class, 0, 'john.doe');
+    }
+
+    /**
+     * @test
+     */
+    public function it_registers_custom_identity_service()
+    {
+        $this->load([
+            'identity' => [
+                'type' => 'service',
+                'factory_service_id' => 'identity_factory_service',
+            ],
+        ]);
+
+        $this->assertContainerBuilderHasAlias(IdentityFactory::class, 'identity_factory_service');
     }
 
     protected function getContainerExtensions(): array

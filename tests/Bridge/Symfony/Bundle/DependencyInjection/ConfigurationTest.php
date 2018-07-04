@@ -25,6 +25,9 @@ class ConfigurationTest extends TestCase
                 'type' => 'fixed',
                 'accounts' => [],
             ],
+            'identity' => [
+                'type' => 'security',
+            ],
         ]);
     }
 
@@ -54,7 +57,7 @@ class ConfigurationTest extends TestCase
     /**
      * @test
      */
-    public function it_requires_factory_service_id_for_service_wallet()
+    public function it_requires_factory_service_id_for_wallet()
     {
         $config = [
             'wallet' => [
@@ -121,6 +124,91 @@ class ConfigurationTest extends TestCase
                 'accounts' => [],
             ],
         ], 'wallet');
+    }
+
+    /**
+     * @test
+     */
+    public function it_processes_simplified_identity_config()
+    {
+        $config = [
+            'identity' => 'john.doe',
+        ];
+
+        $this->assertProcessedConfigurationEquals([$config], [
+            'identity' => [
+                'type' => 'fixed',
+                'identity' => 'john.doe',
+            ],
+        ], 'identity');
+    }
+
+    /**
+     * @test
+     */
+    public function it_requires_identity_value_for_fixed_identity()
+    {
+        $config = [
+            'identity' => [
+                'type' => 'fixed',
+            ],
+        ];
+
+        $this->assertPartialConfigurationIsInvalid([$config], 'identity', 'Identity must be specified.');
+    }
+
+    /**
+     * @test
+     */
+    public function it_configures_fixed_identity()
+    {
+        $config = [
+            'identity' => [
+                'type' => 'fixed',
+                'identity' => 'john.doe',
+            ],
+        ];
+
+        $this->assertProcessedConfigurationEquals([$config], [
+            'identity' => [
+                'type' => 'fixed',
+                'identity' => 'john.doe',
+            ],
+        ], 'identity');
+    }
+
+    /**
+     * @test
+     */
+    public function it_requires_factory_service_id_for_identity()
+    {
+        $config = [
+            'identity' => [
+                'type' => 'service',
+            ],
+        ];
+
+        $this->assertPartialConfigurationIsInvalid([$config], 'identity', 'Service id must be specified.');
+    }
+
+    /**
+     * @test
+     */
+    public function it_configures_identity_factory_service_id()
+    {
+        $config = [
+            'identity' => [
+                'type' => 'service',
+                'factory_service_id' => 'custom_identity_factory',
+            ],
+        ];
+
+        $this->assertProcessedConfigurationEquals([$config], [
+            'identity' => [
+                'type' => 'service',
+                'factory_service_id' => 'custom_identity_factory',
+            ],
+        ], 'identity');
     }
 
     protected function getConfiguration(): ConfigurationInterface
