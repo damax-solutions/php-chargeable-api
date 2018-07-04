@@ -10,7 +10,7 @@ use Damax\ChargeableApi\Processor;
 use Damax\ChargeableApi\Product\ProductResolutionFailed;
 use Damax\ChargeableApi\Product\Resolver;
 
-class StoreProcessor implements Processor
+final class StoreProcessor implements Processor
 {
     private $store;
     private $identityFactory;

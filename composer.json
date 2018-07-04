@@ -14,7 +14,9 @@
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.10",
+    "matthiasnoback/symfony-dependency-injection-test": "^3.0",
     "predis/predis": "^1.1",
+    "symfony/config": "^4.1",
     "symfony/phpunit-bridge": "^4.0",
     "symfony/security-bundle": "^4.1"
   },

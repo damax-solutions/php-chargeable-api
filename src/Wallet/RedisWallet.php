@@ -7,7 +7,7 @@ namespace Damax\ChargeableApi\Wallet;
 use Damax\ChargeableApi\Credit;
 use Predis\ClientInterface;
 
-class RedisWallet implements Wallet
+final class RedisWallet implements Wallet
 {
     private $client;
     private $walletKey;
