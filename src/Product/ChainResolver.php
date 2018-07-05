@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Damax\ChargeableApi\Product;
 
-class ChainResolver implements Resolver
+final class ChainResolver implements Resolver
 {
     /**
      * @var Resolver[]

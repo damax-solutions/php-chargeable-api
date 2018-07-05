@@ -9,7 +9,7 @@ use Damax\ChargeableApi\Identity\IdentityFactory;
 use Damax\ChargeableApi\Identity\UserIdentity;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class TokenIdentityFactory implements IdentityFactory
+final class TokenIdentityFactory implements IdentityFactory
 {
     private $tokenStorage;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Damax\ChargeableApi\Identity;
 
-class FixedIdentityFactory implements IdentityFactory
+final class FixedIdentityFactory implements IdentityFactory
 {
     private $identity;
 

@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class WalletBalanceCommand extends WalletCommand
+final class WalletBalanceCommand extends WalletCommand
 {
     protected static $defaultName = 'damax:chargeable-api:wallet:balance';
 

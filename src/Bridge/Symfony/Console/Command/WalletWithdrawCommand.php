@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class WalletWithdrawCommand extends WalletCommand
+final class WalletWithdrawCommand extends WalletCommand
 {
     protected static $defaultName = 'damax:chargeable-api:wallet:withdraw';
 

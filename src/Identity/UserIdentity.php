@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Damax\ChargeableApi\Identity;
 
-class UserIdentity implements Identity
+final class UserIdentity implements Identity
 {
     private $identity;
 
