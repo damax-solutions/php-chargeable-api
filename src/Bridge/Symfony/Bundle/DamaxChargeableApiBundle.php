@@ -8,6 +8,9 @@ use Damax\ChargeableApi\Bridge\Symfony\Bundle\DependencyInjection\Compiler\Produ
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * @codeCoverageIgnore
+ */
 class DamaxChargeableApiBundle extends Bundle
 {
     public function build(ContainerBuilder $container)

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Damax\ChargeableApi\Tests\Functional;
 
+use Damax\ChargeableApi\Bridge\Symfony\Bundle\DamaxChargeableApiBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -21,7 +22,9 @@ class AppKernel extends Kernel
 
     public function registerBundles(): array
     {
-        return [];
+        return [
+            new DamaxChargeableApiBundle(),
+        ];
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
