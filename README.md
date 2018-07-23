@@ -9,8 +9,9 @@ Charge credit for API calls. Provides integration with [Symfony Framework](https
 - Withdraw credit from user's wallet for specific URLs of your API.
 - Deny access to the service if user has insufficient funds.
 - Specify different prices for various endpoints.
-- Use console commands to review user's balance, deposit and withdraw credit.  
-  
+- Use console commands to review user's balance, deposit and withdraw credit.
+- Support for various wallets: _Redis_, _MongoDB_, _fixed_ wallet with unlimited credit or implement your own.
+
 ## Documentation
 
 Topics:

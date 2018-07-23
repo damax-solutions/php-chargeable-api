@@ -15,6 +15,7 @@ use Damax\ChargeableApi\Store\Store;
 use Damax\ChargeableApi\Store\StoreProcessor;
 use Damax\ChargeableApi\Store\WalletStore;
 use Damax\ChargeableApi\Wallet\InMemoryWalletFactory;
+use Damax\ChargeableApi\Wallet\MongoWalletFactory;
 use Damax\ChargeableApi\Wallet\RedisWalletFactory;
 use Damax\ChargeableApi\Wallet\WalletFactory;
 use Symfony\Component\Config\FileLocator;
@@ -55,6 +56,14 @@ final class DamaxChargeableApiExtension extends ConfigurableExtension
                     ->register(WalletFactory::class, RedisWalletFactory::class)
                     ->addArgument(new Reference($config['redis_client_id']))
                     ->addArgument($config['wallet_key'])
+                ;
+                break;
+            case Configuration::WALLET_MONGO:
+                $container
+                    ->register(WalletFactory::class, MongoWalletFactory::class)
+                    ->addArgument(new Reference($config['mongo_client_id']))
+                    ->addArgument($config['db_name'])
+                    ->addArgument($config['collection_name'])
                 ;
                 break;
             case Configuration::WALLET_SERVICE:

@@ -18,6 +18,7 @@ use Damax\ChargeableApi\Product\FixedProductResolver;
 use Damax\ChargeableApi\Store\Store;
 use Damax\ChargeableApi\Store\StoreProcessor;
 use Damax\ChargeableApi\Wallet\InMemoryWalletFactory;
+use Damax\ChargeableApi\Wallet\MongoWalletFactory;
 use Damax\ChargeableApi\Wallet\RedisWalletFactory;
 use Damax\ChargeableApi\Wallet\WalletFactory;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
@@ -62,6 +63,26 @@ class DamaxChargeableApiExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService(WalletFactory::class, RedisWalletFactory::class);
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(WalletFactory::class, 0, new Reference('snc_redis.default'));
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(WalletFactory::class, 1, 'wallet');
+    }
+
+    /**
+     * @test
+     */
+    public function it_registers_mongo_wallet()
+    {
+        $this->load([
+            'wallet' => [
+                'type' => 'mongo',
+                'mongo_client_id' => 'mongo_client',
+                'db_name' => 'api',
+                'collection_name' => 'wallet',
+            ],
+        ]);
+
+        $this->assertContainerBuilderHasService(WalletFactory::class, MongoWalletFactory::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(WalletFactory::class, 0, new Reference('mongo_client'));
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(WalletFactory::class, 1, 'api');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(WalletFactory::class, 2, 'wallet');
     }
 
     /**

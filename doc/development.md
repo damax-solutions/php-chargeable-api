@@ -21,6 +21,6 @@ $ docker run --rm -v $(pwd):/app -w /app damax-chargeable-api composer cs
 Running tests:
 
 ```bash
-$ docker run --rm -v $(pwd):/app -w /app damax-chargeable-api composer test
-$ docker run --rm -v $(pwd):/app -w /app damax-chargeable-api composer test-cc
+$ docker run --rm -v $(pwd):/app -w /app --link mongo damax-chargeable-api composer test
+$ docker run --rm -v $(pwd):/app -w /app --link mongo damax-chargeable-api composer test-cc
 ```

@@ -141,6 +141,45 @@ class ConfigurationTest extends TestCase
     /**
      * @test
      */
+    public function it_requires_necessary_config_for_mongo_wallet()
+    {
+        $config = [
+            'wallet' => [
+                'type' => 'mongo',
+            ],
+        ];
+
+        $this->assertPartialConfigurationIsInvalid([$config], 'wallet', 'Mongo client, database and collection name must be specified.');
+    }
+
+    /**
+     * @test
+     */
+    public function it_configures_mongo_wallet()
+    {
+        $config = [
+            'wallet' => [
+                'type' => 'mongo',
+                'mongo_client_id' => 'mongo_client',
+                'db_name' => 'api',
+                'collection_name' => 'wallet',
+            ],
+        ];
+
+        $this->assertProcessedConfigurationEquals([$config], [
+            'wallet' => [
+                'type' => 'mongo',
+                'mongo_client_id' => 'mongo_client',
+                'db_name' => 'api',
+                'collection_name' => 'wallet',
+                'accounts' => [],
+            ],
+        ], 'wallet');
+    }
+
+    /**
+     * @test
+     */
     public function it_processes_simplified_identity_config()
     {
         $config = [

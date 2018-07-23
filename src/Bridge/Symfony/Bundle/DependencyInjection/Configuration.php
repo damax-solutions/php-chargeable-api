@@ -10,8 +10,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 final class Configuration implements ConfigurationInterface
 {
-    public const WALLET_FIXED = 'fixed';
     public const WALLET_REDIS = 'redis';
+    public const WALLET_MONGO = 'mongo';
+    public const WALLET_FIXED = 'fixed';
     public const WALLET_SERVICE = 'service';
 
     public const IDENTITY_FIXED = 'fixed';
@@ -59,14 +60,28 @@ final class Configuration implements ConfigurationInterface
                 })
                 ->thenInvalid('Wallet key and Redis client must be specified.')
             ->end()
+            ->validate()
+                ->ifTrue(function (array $config) {
+                    return self::WALLET_MONGO === $config['type'] && (empty($config['mongo_client_id']) || empty($config['db_name']) || empty($config['collection_name']));
+                })
+                ->thenInvalid('Mongo client, database and collection name must be specified.')
+            ->end()
             ->children()
                 ->enumNode('type')
-                    ->values([self::WALLET_FIXED, self::WALLET_REDIS, self::WALLET_SERVICE])
+                    ->values([self::WALLET_REDIS, self::WALLET_MONGO, self::WALLET_FIXED, self::WALLET_SERVICE])
                     ->defaultValue(self::WALLET_FIXED)
                 ->end()
+
+                // Redis
                 ->scalarNode('redis_client_id')->cannotBeEmpty()->end()
                 ->scalarNode('wallet_key')->cannotBeEmpty()->end()
-                ->scalarNode('factory_service_id')->cannotBeEmpty()->end()
+
+                // Mongo
+                ->scalarNode('mongo_client_id')->cannotBeEmpty()->end()
+                ->scalarNode('db_name')->cannotBeEmpty()->end()
+                ->scalarNode('collection_name')->cannotBeEmpty()->end()
+
+                // Fixed
                 ->arrayNode('accounts')
                     ->useAttributeAsKey(true)
                     ->requiresAtLeastOneElement()
@@ -74,6 +89,9 @@ final class Configuration implements ConfigurationInterface
                         ->isRequired()
                     ->end()
                 ->end()
+
+                // Service
+                ->scalarNode('factory_service_id')->cannotBeEmpty()->end()
             ->end()
         ;
     }
