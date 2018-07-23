@@ -15,6 +15,10 @@ Charge credit for API calls. Provides integration with [Symfony Framework](https
 
 ## Concepts
 
+API authentication is not part of this library. The identity behind the API call must be resolved (authenticated) by your code.
+
+See [example](examples/processor.php).
+
 #### Identity
 
 [Identity](src/Identity/Identity.php) of authenticated user created by [IdentityFactory](src/Identity/IdentityFactory.php).
