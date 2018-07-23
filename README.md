@@ -19,6 +19,10 @@ API authentication is not part of this library. The identity behind the API call
 
 See [example](examples/processor.php).
 
+#### Credit
+
+Non-negative integer value. Could be represented as amount of cents on user's balance or whatever suits your design.
+
 #### Identity
 
 [Identity](src/Identity/Identity.php) of authenticated user created by [IdentityFactory](src/Identity/IdentityFactory.php).
@@ -32,7 +36,7 @@ There must be at least one product defined. Resolved through product [Resolver](
 #### Wallet
 
 Created by [WalletFactory](src/Wallet/WalletFactory.php) based on provided [Identity](src/Identity/Identity.php).
-You can deposit, withdraw or fetch available balance from the [Wallet](src/Wallet/Wallet.php).
+You can deposit, withdraw or fetch available [Credit](src/Credit.php) from the [Wallet](src/Wallet/Wallet.php).
 
 #### Store
 
