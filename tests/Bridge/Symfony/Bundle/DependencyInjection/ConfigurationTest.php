@@ -291,6 +291,18 @@ class ConfigurationTest extends TestCase
     /**
      * @test
      */
+    public function it_requires_at_least_one_product_configures()
+    {
+        $config = [
+            'product' => [],
+        ];
+
+        $this->assertPartialConfigurationIsInvalid([$config], 'product', 'should have at least 1 element(s) defined.');
+    }
+
+    /**
+     * @test
+     */
     public function it_configures_product_matcher()
     {
         $config = [
