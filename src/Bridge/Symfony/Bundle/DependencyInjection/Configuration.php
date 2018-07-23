@@ -131,35 +131,36 @@ final class Configuration implements ConfigurationInterface
 
     private function productNode(string $name): ArrayNodeDefinition
     {
+        $defaults = ['name' => 'API', 'price' => 1];
+
         return (new ArrayNodeDefinition($name))
-            ->addDefaultsIfNotSet()
+            ->requiresAtLeastOneElement()
             ->beforeNormalization()
                 ->ifString()
-                ->then(function (string $config): array {
-                    return ['default' => ['name' => $config]];
+                ->then(function (string $config) use ($defaults): array {
+                    return [array_replace($defaults, ['name' => $config])];
                 })
             ->end()
             ->beforeNormalization()
                 ->ifTrue(function ($config): bool {
                     return is_numeric($config);
                 })
-                ->then(function (int $config): array {
-                    return ['default' => ['price' => $config]];
+                ->then(function (int $config) use ($defaults): array {
+                    return [array_replace($defaults, ['price' => $config])];
                 })
             ->end()
-            ->children()
-                ->arrayNode('default')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('name')
-                            ->cannotBeEmpty()
-                            ->defaultValue('API')
-                        ->end()
-                        ->integerNode('price')
-                            ->min(1)
-                            ->defaultValue(1)
-                        ->end()
+            ->defaultValue([$defaults])
+            ->arrayPrototype()
+                ->children()
+                    ->scalarNode('name')
+                        ->isRequired()
+                        ->cannotBeEmpty()
                     ->end()
+                    ->integerNode('price')
+                        ->min(1)
+                        ->defaultValue(1)
+                    ->end()
+                    ->append($this->matcherNode('matcher'))
                 ->end()
             ->end()
         ;
@@ -174,22 +175,29 @@ final class Configuration implements ConfigurationInterface
                     ->max(7)
                     ->defaultValue(4)
                 ->end()
-                ->arrayNode('matcher')
-                    ->beforeNormalization()
-                        ->ifString()
-                        ->then(function (string $config): array {
-                            return ['path' => $config];
-                        })
-                    ->end()
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('path')
-                            ->cannotBeEmpty()
-                        ->end()
-                        ->arrayNode('ips')
-                            ->scalarPrototype()->cannotBeEmpty()->end()
-                        ->end()
-                    ->end()
+                ->append($this->matcherNode('matcher'))
+            ->end()
+        ;
+    }
+
+    private function matcherNode(string $name): ArrayNodeDefinition
+    {
+        return (new ArrayNodeDefinition($name))
+            ->beforeNormalization()
+                ->ifString()
+                ->then(function (string $config): array {
+                    return ['path' => $config];
+                })
+            ->end()
+            ->children()
+                ->scalarNode('path')
+                    ->cannotBeEmpty()
+                ->end()
+                ->arrayNode('ips')
+                    ->scalarPrototype()->cannotBeEmpty()->end()
+                ->end()
+                ->arrayNode('methods')
+                    ->scalarPrototype()->cannotBeEmpty()->end()
                 ->end()
             ->end()
         ;

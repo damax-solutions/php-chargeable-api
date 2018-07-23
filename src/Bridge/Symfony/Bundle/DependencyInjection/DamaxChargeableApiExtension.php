@@ -6,11 +6,12 @@ namespace Damax\ChargeableApi\Bridge\Symfony\Bundle\DependencyInjection;
 
 use Damax\ChargeableApi\Bridge\Symfony\Bundle\Listener\PurchaseListener;
 use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\NotificationStore;
+use Damax\ChargeableApi\Bridge\Symfony\HttpFoundation\ProductResolver;
 use Damax\ChargeableApi\Bridge\Symfony\Security\TokenIdentityFactory;
 use Damax\ChargeableApi\Identity\FixedIdentityFactory;
 use Damax\ChargeableApi\Identity\IdentityFactory;
 use Damax\ChargeableApi\Processor;
-use Damax\ChargeableApi\Product\FixedProductResolver;
+use Damax\ChargeableApi\Product\Product;
 use Damax\ChargeableApi\Store\Store;
 use Damax\ChargeableApi\Store\StoreProcessor;
 use Damax\ChargeableApi\Store\WalletStore;
@@ -96,27 +97,27 @@ final class DamaxChargeableApiExtension extends ConfigurableExtension
 
     private function configureProduct(array $config, ContainerBuilder $container): self
     {
-        $container
-            ->register(FixedProductResolver::class)
-            ->addArgument($config['default']['name'])
-            ->addArgument($config['default']['price'])
-            ->addTag('damax.chargeable_api.product_resolver', ['priority' => -1024])
+        $resolver = $container
+            ->register(ProductResolver::class)
+            ->addTag('damax.chargeable_api.product_resolver', ['priority' => 0])
         ;
+
+        foreach ($config as $item) {
+            $product = (new Definition(Product::class))
+                ->addArgument($item['name'])
+                ->addArgument($item['price'])
+            ;
+            $matcher = $this->createMatcher($item['matcher'] ?? []);
+
+            $resolver->addMethodCall('addProduct', [$product, $matcher]);
+        }
 
         return $this;
     }
 
     private function configureListener(array $config, ContainerBuilder $container): self
     {
-        $ips = !empty($config['matcher']['ips']) ? $config['matcher']['ips'] : null;
-        $methods = !empty($config['matcher']['methods']) ? $config['matcher']['methods'] : null;
-
-        $matcher = (new Definition(RequestMatcher::class))
-            ->addArgument($config['matcher']['path'] ?? null)
-            ->addArgument($config['matcher']['host'] ?? null)
-            ->addArgument($methods)
-            ->addArgument($ips)
-        ;
+        $matcher = $this->createMatcher($config['matcher'] ?? []);
 
         $container
             ->register(PurchaseListener::class)
@@ -144,5 +145,18 @@ final class DamaxChargeableApiExtension extends ConfigurableExtension
         $container->autowire(Processor::class, StoreProcessor::class);
 
         return $this;
+    }
+
+    private function createMatcher(array $config): Definition
+    {
+        $ips = !empty($config['ips']) ? $config['ips'] : null;
+        $methods = !empty($config['methods']) ? $config['methods'] : null;
+
+        return (new Definition(RequestMatcher::class))
+            ->addArgument($config['path'] ?? null)
+            ->addArgument($config['host'] ?? null)
+            ->addArgument($methods)
+            ->addArgument($ips)
+        ;
     }
 }

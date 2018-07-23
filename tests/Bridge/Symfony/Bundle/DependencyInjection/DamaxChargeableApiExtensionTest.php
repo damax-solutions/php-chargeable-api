@@ -10,11 +10,12 @@ use Damax\ChargeableApi\Bridge\Symfony\Console\Command\WalletBalanceCommand;
 use Damax\ChargeableApi\Bridge\Symfony\Console\Command\WalletDepositCommand;
 use Damax\ChargeableApi\Bridge\Symfony\Console\Command\WalletWithdrawCommand;
 use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\NotificationStore;
+use Damax\ChargeableApi\Bridge\Symfony\HttpFoundation\ProductResolver;
 use Damax\ChargeableApi\Bridge\Symfony\Security\TokenIdentityFactory;
 use Damax\ChargeableApi\Identity\FixedIdentityFactory;
 use Damax\ChargeableApi\Identity\IdentityFactory;
 use Damax\ChargeableApi\Processor;
-use Damax\ChargeableApi\Product\FixedProductResolver;
+use Damax\ChargeableApi\Product\Product;
 use Damax\ChargeableApi\Store\Store;
 use Damax\ChargeableApi\Store\StoreProcessor;
 use Damax\ChargeableApi\Wallet\InMemoryWalletFactory;
@@ -143,10 +144,49 @@ class DamaxChargeableApiExtensionTest extends AbstractExtensionTestCase
     {
         $this->load(['product' => 5]);
 
-        $this->assertContainerBuilderHasService(FixedProductResolver::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(FixedProductResolver::class, 0, 'API');
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(FixedProductResolver::class, 1, 5);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag(FixedProductResolver::class, 'damax.chargeable_api.product_resolver', ['priority' => -1024]);
+        $this->assertContainerBuilderHasService(ProductResolver::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(ProductResolver::class, 'damax.chargeable_api.product_resolver', ['priority' => 0]);
+
+        $calls = $this->container
+            ->getDefinition(ProductResolver::class)
+            ->getMethodCalls()
+        ;
+
+        $this->assertCount(1, $calls);
+        $this->assertProductMatcher('API', 5, null, null, null, $calls[0]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_registers_product_resolver()
+    {
+        $this->load([
+            'product' => [
+                [
+                    'name' => 'One',
+                    'price' => 10,
+                    'matcher' => [
+                        'path' => '/one',
+                        'ips' => ['192.168.1.100', '192.168.1.101'],
+                        'methods' => ['get', 'post'],
+                    ],
+                ],
+                [
+                    'name' => 'Two',
+                    'price' => 15,
+                ],
+            ],
+        ]);
+
+        $calls = $this->container
+            ->getDefinition(ProductResolver::class)
+            ->getMethodCalls()
+        ;
+
+        $this->assertCount(2, $calls);
+        $this->assertProductMatcher('One', 10, '/one', ['get', 'post'], ['192.168.1.100', '192.168.1.101'], $calls[0]);
+        $this->assertProductMatcher('Two', 15, null, null, null, $calls[1]);
     }
 
     /**
@@ -205,5 +245,25 @@ class DamaxChargeableApiExtensionTest extends AbstractExtensionTestCase
         return [
             new DamaxChargeableApiExtension(),
         ];
+    }
+
+    private function assertProductMatcher(string $name, int $price, ?string $path, ?array $methods, ?array $ips, array $arguments)
+    {
+        $this->assertEquals('addProduct', $arguments[0]);
+
+        /** @var Definition[] $definitions */
+        $definitions = $arguments[1];
+
+        // Product.
+        $this->assertEquals(Product::class, $definitions[0]->getClass());
+        $this->assertEquals($name, $definitions[0]->getArgument(0));
+        $this->assertEquals($price, $definitions[0]->getArgument(1));
+
+        // Matcher.
+        $this->assertEquals(RequestMatcher::class, $definitions[1]->getClass());
+        $this->assertNull($definitions[1]->getArgument(1));
+        $this->assertSame($path, $definitions[1]->getArgument(0));
+        $this->assertSame($methods, $definitions[1]->getArgument(2));
+        $this->assertSame($ips, $definitions[1]->getArgument(3));
     }
 }

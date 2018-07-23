@@ -29,16 +29,10 @@ class ConfigurationTest extends TestCase
                 'type' => 'security',
             ],
             'product' => [
-                'default' => [
-                    'name' => 'API',
-                    'price' => 1,
-                ],
+                ['name' => 'API', 'price' => 1],
             ],
             'listener' => [
                 'priority' => 4,
-                'matcher' => [
-                    'ips' => [],
-                ],
             ],
         ]);
     }
@@ -273,10 +267,7 @@ class ConfigurationTest extends TestCase
 
         $this->assertProcessedConfigurationEquals([$config], [
             'product' => [
-                'default' => [
-                    'name' => 'Service',
-                    'price' => 1,
-                ],
+                ['name' => 'Service', 'price' => 1],
             ],
         ], 'product');
     }
@@ -292,9 +283,47 @@ class ConfigurationTest extends TestCase
 
         $this->assertProcessedConfigurationEquals([$config], [
             'product' => [
-                'default' => [
-                    'name' => 'API',
+                ['name' => 'API', 'price' => 10],
+            ],
+        ], 'product');
+    }
+
+    /**
+     * @test
+     */
+    public function it_configures_product_matcher()
+    {
+        $config = [
+            'product' => [
+                [
+                    'name' => 'Product one',
                     'price' => 10,
+                    'matcher' => [
+                        'path' => '^/services/one/',
+                        'methods' => ['post'],
+                    ],
+                ],
+                [
+                    'name' => 'Product two',
+                    'price' => 15,
+                ],
+            ],
+        ];
+
+        $this->assertProcessedConfigurationEquals([$config], [
+            'product' => [
+                [
+                    'name' => 'Product one',
+                    'price' => 10,
+                    'matcher' => [
+                        'path' => '^/services/one/',
+                        'methods' => ['post'],
+                        'ips' => [],
+                    ],
+                ],
+                [
+                    'name' => 'Product two',
+                    'price' => 15,
                 ],
             ],
         ], 'product');
@@ -317,6 +346,7 @@ class ConfigurationTest extends TestCase
                 'matcher' => [
                     'path' => '^/api/',
                     'ips' => [],
+                    'methods' => [],
                 ],
             ],
         ], 'listener');
@@ -343,6 +373,7 @@ class ConfigurationTest extends TestCase
                 'matcher' => [
                     'path' => '^/api/',
                     'ips' => ['192.168.1.2', '192.168.1.3'],
+                    'methods' => [],
                 ],
             ],
         ], 'listener');
