@@ -13,3 +13,6 @@ RUN apt-get update && apt-get install -y git && rm -r /var/lib/apt/lists/*
 RUN cd /usr/local/bin \
     && php -r "readfile('https://getcomposer.org/installer');" | php \
     && mv composer.phar composer
+
+# mongodb
+RUN pecl install mongodb-1.5.1 && docker-php-ext-enable mongodb
