@@ -26,11 +26,11 @@ Non-negative integer value. Could be represented as amount of cents on user's ba
 #### Identity
 
 [Identity](src/Identity/Identity.php) of authenticated user created by [IdentityFactory](src/Identity/IdentityFactory.php).
-Before charging credit user must be successfully authenticated.
+Before charging [Credit](src/Credit.php) user must be successfully authenticated.
 
 #### Product
 
-[Product](src/Product/Product.php) describes the amount of credit you charge for specific API endpoint.
+[Product](src/Product/Product.php) describes the amount of [Credit](src/Credit.php) you charge for specific API endpoint.
 There must be at least one product defined. Resolved through product [Resolver](src/Product/Resolver.php) based on incoming request.
 
 #### Wallet
