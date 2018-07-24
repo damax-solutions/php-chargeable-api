@@ -46,4 +46,5 @@ You can deposit, withdraw or fetch available [Credit](src/Credit.php) from the [
 
 Topics:
 
+- [Installation](doc/installation.md)
 - [Development](doc/development.md)
