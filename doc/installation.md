@@ -34,16 +34,16 @@ Snc\RedisBundle\SncRedisBundle::class => ['all' => true],
 
 ## Configuration
 
-By default all routes are processed for payment. You can configure paid services endpoint with below:
+By default all routes are processed for payment. You can configure endpoints for paid APIs with below:
 
 ```yaml
 damax_chargeable_api:
     listener:
-        matcher: ^/api/
+        matcher: ^/api/services/ # Regex
 ```
 
 As all paid endpoints require authentication make sure it is covered by _Security_ firewall.
 
 ## Next
 
-Read next about basic [concepts](concepts.md) or skip right to [configuration](configuration.md).
+Read next about library [concepts](concepts.md) or skip right to [configuration](configuration.md).

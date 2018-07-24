@@ -24,3 +24,7 @@ You can deposit, withdraw or fetch available [Credit](src/Credit.php) from the [
 ### Store
 
 [Store](src/Store/Store.php) charges [Identity](src/Identity/Identity.php) for the _price_ of resolved [Product](src/Product/Product.php) returning a purchase [Receipt](src/Store/Receipt.php).
+
+## Next
+
+Read next how [configure](configuration.md) paid APIs.
