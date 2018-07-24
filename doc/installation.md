@@ -46,4 +46,4 @@ As all paid endpoints require authentication make sure it is covered by _Securit
 
 ## Next
 
-Read next about basic [concepts](doc/concepts.md) or skip right to [configuration](doc/configuration.md).
+Read next about basic [concepts](concepts.md) or skip right to [configuration](configuration.md).
