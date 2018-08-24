@@ -1,4 +1,4 @@
-FROM php:7.2-cli
+FROM php:7.1-cli
 
 LABEL maintainer="dmitri@devmachine.net"
 
@@ -16,3 +16,5 @@ RUN cd /usr/local/bin \
 
 # mongodb
 RUN pecl install mongodb-1.5.1 && docker-php-ext-enable mongodb
+
+ENV SYMFONY_PHPUNIT_VERSION=6.5

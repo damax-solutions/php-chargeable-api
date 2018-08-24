@@ -27,4 +27,4 @@ You can deposit, withdraw or fetch available [Credit](src/Credit.php) from the [
 
 ## Next
 
-Read next how [configure](configuration.md) paid APIs.
+Read next how to [configure](configuration.md) paid APIs.
