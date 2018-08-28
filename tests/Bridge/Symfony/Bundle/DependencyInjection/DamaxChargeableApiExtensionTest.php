@@ -15,7 +15,9 @@ use Damax\ChargeableApi\Bridge\Symfony\Security\TokenIdentityFactory;
 use Damax\ChargeableApi\Identity\FixedIdentityFactory;
 use Damax\ChargeableApi\Identity\IdentityFactory;
 use Damax\ChargeableApi\Processor;
+use Damax\ChargeableApi\Product\ChainResolver;
 use Damax\ChargeableApi\Product\Product;
+use Damax\ChargeableApi\Product\Resolver;
 use Damax\ChargeableApi\Store\Store;
 use Damax\ChargeableApi\Store\StoreProcessor;
 use Damax\ChargeableApi\Wallet\InMemoryWalletFactory;
@@ -23,6 +25,7 @@ use Damax\ChargeableApi\Wallet\MongoWalletFactory;
 use Damax\ChargeableApi\Wallet\RedisWalletFactory;
 use Damax\ChargeableApi\Wallet\WalletFactory;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\RequestMatcher;
@@ -178,6 +181,15 @@ class DamaxChargeableApiExtensionTest extends AbstractExtensionTestCase
                 ],
             ],
         ]);
+
+        $this->assertContainerBuilderHasService(Resolver::class, ChainResolver::class);
+
+        $argument = $this->container
+            ->getDefinition(Resolver::class)
+            ->getArgument(0)
+        ;
+        $this->assertInstanceOf(TaggedIteratorArgument::class, $argument);
+        $this->assertEquals('damax.chargeable_api.product_resolver', $argument->getTag());
 
         $calls = $this->container
             ->getDefinition(ProductResolver::class)
