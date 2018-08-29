@@ -58,6 +58,60 @@ Register product resolver in container:
 
 Use the priority attribute when registering multiple resolvers.
 
+## Communication with other systems
+
+API application may need to notify other systems about user's balance change. Consider below example:
+
+```php
+namespace App\Payments\Listener;
+
+use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\Event\PurchaseFinished;
+use Damax\ChargeableApi\Bridge\Symfony\EventDispatcher\Events as ChargeEvents;
+use Interop\Queue\PsrContext;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class PurchaseListener implements EventSubscriberInterface
+{
+    private $context;
+    private $queueName;
+
+    public function __construct(PsrContext $context, string $queueName)
+    {
+        $this->context = $context;
+        $this->queueName = $queueName;
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [ChargeEvents::PURCHASE_FINISHED => 'onPurchaseFinished'];
+    }
+
+    public function onPurchaseFinished(PurchaseFinished $event): void
+    {
+        $data = [
+            'user_id' => (string) $event->identity(),
+            'product' => $event->product()->name(),
+            'amount' => $event->receipt()->price()->toInteger(),
+        ];
+
+        $this->context->createProducer()->send(
+            $this->context->createQueue($this->queueName),
+            $this->context->createMessage(serialize($data))
+        );
+    }
+}
+```
+
+Register listener in container:
+
+```xml
+<service id="App\Payments\Listener\PurchaseListener">
+    <argument type="service" id="enqueue.transport.context" />
+    <argument>purchase_events</argument>
+    <tag name="kernel.event_subscriber" />
+</service>
+```
+
 ## Next
 
 If you wish to contribute take a look how to [run the code locally](development.md) in Docker.
