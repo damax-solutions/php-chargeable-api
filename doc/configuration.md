@@ -126,6 +126,14 @@ damax_chargeable_api:
         factory_service_id: app.chargeable_api.wallet_factory
 ```
 
+## Complete reference
+
+Run `config:dump-reference` to see all available options:
+
+```bash
+$ ./bin/console config:dump-reference damax_chargeable_api
+```
+
 ## Next
 
 Read next on [usage examples](usage.md).
