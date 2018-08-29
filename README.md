@@ -22,4 +22,5 @@ Topics:
 - [Installation](doc/installation.md)
 - [Concepts](doc/concepts.md)
 - [Configuration](doc/configuration.md)
+- [Usage](doc/usage.md)
 - [Development](doc/development.md)

@@ -82,3 +82,50 @@ damax_chargeable_api:
         type: service
         factory_service_id: app.chargeable_api.identity_factory
 ```
+
+## Wallet
+
+For testing purposes `fixed` wallet is the best choice. This is in memory representation of users' balances:
+
+```yaml
+damax_chargeable_api:
+    wallet:
+        'john.doe@domain.abc': 10
+        'jane.doe@domain.abc': 50
+```
+
+In other words, there is fixed amount of credits on user's balance for each payment request.
+
+For _Redis_:
+
+```yaml
+damax_chargeable_api:
+    wallet:
+        type: redis
+        wallet_key: wallet
+        redis_client_id: snc_redis.default # service implementing Predis\ClientInterface
+```
+
+For _Mongo_:
+
+```yaml
+damax_chargeable_api:
+    wallet:
+        type: mongo
+        mongo_client_id: MongoDB\Client
+        db_name: project
+        collection_name: user
+```
+
+Register custom service by implementing [WalletFactory](../src/Wallet/WalletFactory.php):
+
+```yaml
+damax_chargeable_api:
+    wallet:
+        type: service
+        factory_service_id: app.chargeable_api.wallet_factory
+```
+
+## Next
+
+Read next on [usage examples](usage.md).
