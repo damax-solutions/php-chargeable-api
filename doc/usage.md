@@ -26,8 +26,7 @@ $ ./bin/console damax:chargeable-api:wallet:withdraw john.doe@domain.abc 10
 
 ## Custom product resolver
 
-Let's say your API can return _json_ response or generate _pdf_ document, but at bigger cost.
-For such request the payment of 10 credits is required:
+Let's say your API can return _json_ response or generate a _pdf_ document, but at bigger cost e.g. 10 credits:
 
 ```php
 namespace App\Report;
@@ -49,13 +48,15 @@ final class PdfReportResolver implements Resolver
 }
 ```
 
-Registering product resolver in container:
+Register product resolver in container:
 
 ```xml
 <service id="App\Report\PdfReportResolver">
     <tag name="damax.chargeable_api.product_resolver" priority="4" />
 </service>
 ```
+
+Use the priority attribute when registering multiple resolvers.
 
 ## Next
 
