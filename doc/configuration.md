@@ -94,7 +94,7 @@ damax_chargeable_api:
         'jane.doe@domain.abc': 50
 ```
 
-In other words, there is fixed amount of credits on user's balance for each payment request.
+In other words, there is fixed amount of credit on user's balance for each payment request.
 
 For _Redis_:
 
