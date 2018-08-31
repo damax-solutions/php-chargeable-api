@@ -11,7 +11,7 @@ final class ChainResolver implements Resolver
      */
     private $resolvers;
 
-    public function __construct(array $resolvers = [])
+    public function __construct(iterable $resolvers = [])
     {
         foreach ($resolvers as $resolver) {
             $this->add($resolver);
