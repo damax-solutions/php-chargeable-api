@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "594392cbf541f4fc8c2b83b31efe3508",
@@ -2015,7 +2015,7 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v4.1.6",
+            "version": "v4.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
