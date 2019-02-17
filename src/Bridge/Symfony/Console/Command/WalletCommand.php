@@ -29,6 +29,8 @@ abstract class WalletCommand extends Command
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->identityFactory = new FixedIdentityFactory($input->getArgument('identity') ?? '');
+        $identity = $input->getArgument('identity') ?? '';
+
+        $this->identityFactory = new FixedIdentityFactory((string) $identity);
     }
 }
