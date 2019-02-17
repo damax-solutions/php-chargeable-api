@@ -111,7 +111,3 @@ Register listener in container:
     <tag name="kernel.event_subscriber" />
 </service>
 ```
-
-## Next
-
-If you wish to contribute take a look how to [run the code locally](development.md) in Docker.

@@ -26,8 +26,8 @@ class MongoWalletTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        $host = $_ENV['MONGO_PORT_27017_TCP_ADDR'] ?? 'localhost';
-        $port = $_ENV['MONGO_PORT_27017_TCP_PORT'] ?? 27017;
+        $host = $_ENV['MONGO_HOST'] ?? 'localhost';
+        $port = $_ENV['MONGO_PORT'] ?? 27017;
 
         self::$collection = (new Client(sprintf('mongodb://%s:%d', $host, $port)))->selectCollection('api_test', 'wallet');
     }

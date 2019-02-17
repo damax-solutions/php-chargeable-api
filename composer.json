@@ -3,17 +3,11 @@
   "type": "library",
   "description": "Charge credit for API calls.",
   "license": "MIT",
-  "autoload": {
-    "psr-4": { "Damax\\ChargeableApi\\": "src" }
-  },
-  "autoload-dev": {
-    "psr-4": { "Damax\\ChargeableApi\\Tests\\": "tests" }
-  },
   "require": {
     "php": "^7.1"
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^2.10",
+    "friendsofphp/php-cs-fixer": "^2.14",
     "matthiasnoback/symfony-dependency-injection-test": "^3.0",
     "mongodb/mongodb": "^1.4",
     "php-coveralls/php-coveralls": "^2.1",
@@ -22,12 +16,16 @@
     "symfony/phpunit-bridge": "^4.0",
     "symfony/security-bundle": "^4.1"
   },
+  "autoload": {
+    "psr-4": { "Damax\\ChargeableApi\\": "src" }
+  },
+  "autoload-dev": {
+    "psr-4": { "Damax\\ChargeableApi\\Tests\\": "tests" }
+  },
   "scripts": {
     "cs": "php-cs-fixer fix",
     "test": "simple-phpunit",
-    "test-cc": "./bin/phpunit-coverage",
-    "test-ci": "simple-phpunit --coverage-clover=build/logs/clover.xml",
-    "test-publish": "php-coveralls"
+    "test-cc": "phpdbg -qrr ./vendor/bin/simple-phpunit --coverage-html=build/phpunit"
   },
   "config": {
     "sort-packages": true

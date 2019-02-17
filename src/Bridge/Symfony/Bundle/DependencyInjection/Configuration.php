@@ -21,9 +21,9 @@ final class Configuration implements ConfigurationInterface
 
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
+        $treeBuilder = new TreeBuilder('damax_chargeable_api');
 
-        $rootNode = $treeBuilder->root('damax_chargeable_api');
+        $rootNode = $treeBuilder->getRootNode();
         $rootNode
             ->children()
                 ->append($this->walletNode('wallet'))
